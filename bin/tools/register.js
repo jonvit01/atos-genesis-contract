@@ -40,16 +40,18 @@ async function getWallet(NODE_URL,publicKeyPath) {
 async function registerCandidate() {
   const args = process.argv.slice(2);
 
-  if (args.length < 2) {
-    console.error('请提供钱包私钥地址和节点 RPC 地址。');
+  if (args.length < 3) {
+    console.error('请提供-节点 RPC 地址-私钥文件-注册代币数量。');
     process.exit(1);
   }
 
  
   const NODE_URL = args[0];
   const privateKeyPath = args[1];
+  const tokenRegisteCount=args[2];
   console.log('接收到的钱包私钥地址:', privateKeyPath);
   console.log('接收到的节点 RPC 地址:', NODE_URL);
+  console.log('注册质押代币:',tokenRegisteCount)
 
   try {
     const wallet = await getWallet(NODE_URL, privateKeyPath);
@@ -74,7 +76,7 @@ async function registerCandidate() {
     console.log('所需的押金:', requiredMargin);
 
     // 调用 register 方法
-    const tx = await contract.register(consensusAddr, feeAddr, commissionThousandths,{value:ethers.parseEther("20000")});
+    const tx = await contract.register(consensusAddr, feeAddr, commissionThousandths,{value:ethers.parseEther(tokenRegisteCount)});
 
     console.log('交易发送中...');
     const receipt=await tx.wait(); // 等待交易确认
