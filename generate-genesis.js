@@ -9,7 +9,7 @@ const init_holders = require("./init_holders")
 const init_cycle = require("./init_cycle")
 
 
-program.option("-c, --chainid <chainid>", "chain id, mainnet 1116 testnet 1115 devnet 1112", "1116")
+program.option("-c, --chainid <chainid>", "chain id, mainnet 1168 testnet 1167", "1167")
 
 program.option(
     "--initValidatorSetBytes <initValidatorSetBytes>",
@@ -22,9 +22,9 @@ program.option("--initConsensusStateBytes <initConsensusStateBytes>",
 
 require("./generate-system");
 require("./generate-validatorset");
-require("./generate-btclightclient");
+// require("./generate-btclightclient");
 require("./generate-slash");
-require("./generate-govhub");
+// require("./generate-govhub");
 require("./generate-candidatehub");
 require("./generate-pledgeagent");
 
@@ -96,40 +96,15 @@ Promise.all([
       "SlashIndicator"
   ),
   compileContract(
-      "btcLightClient",
-      "contracts/BtcLightClient.sol",
-      "BtcLightClient"
-  ),
-  compileContract(
-      "relayerHub",
-      "contracts/RelayerHub.sol",
-      "RelayerHub"
-  ),
-  compileContract(
       "candidateHub",
       "contracts/CandidateHub.sol",
       "CandidateHub"
-  ),
-  compileContract(
-      "govHub",
-      "contracts/GovHub.sol",
-      "GovHub"
   ),
   compileContract(
       "pledgeAgent",
       "contracts/PledgeAgent.sol",
       "PledgeAgent"
   ),
-  compileContract(
-    "burn",
-    "contracts/Burn.sol",
-    "Burn"
-  ),
-  compileContract(
-    "foundation",
-    "contracts/Foundation.sol",
-    "Foundation"
-  )
 ]).then(result => {
 
   const data = {

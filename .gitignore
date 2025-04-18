@@ -10,14 +10,14 @@ contracts/artifacts/*.json
 coverage/
 coverage.json
 coverage.js
-abi/BytesLib.abi
-abi/BytesToTypes.abi
-abi/I*.abi
-abi/Memory.abi
-abi/Ownable.abi
-abi/RLP*.abi
-abi/SafeMath.abi
-abi/System.abi
+#abi/BytesLib.abi
+#abi/BytesToTypes.abi
+#abi/I*.abi
+#abi/Memory.abi
+#abi/Ownable.abi
+#abi/RLP*.abi
+#abi/SafeMath.abi
+#abi/System.abi
 
 # test
 .pytest_cache

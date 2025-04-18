@@ -27,10 +27,15 @@ def set_min_init_delegate_value(min_init_delegate_value):
 @pytest.fixture(scope="module", autouse=True)
 def set_block_reward(validator_set):
     global BLOCK_REWARD
+    print("#1",BLOCK_REWARD)
     block_reward = validator_set.blockReward()
+    print("#1",block_reward)
     block_reward_incentive_percent = validator_set.blockRewardIncentivePercent()
+    print("#2",block_reward_incentive_percent)
     total_block_reward = block_reward + TX_FEE
+    print("#3",total_block_reward)
     BLOCK_REWARD = total_block_reward * ((100 - block_reward_incentive_percent) / 100)
+    print("#4",BLOCK_REWARD)
 
 
 @pytest.fixture()
@@ -48,12 +53,15 @@ def test_delegate_once(pledge_agent, validator_set, claim_type):
     pledge_agent.delegateCoin(operator, {"value": MIN_INIT_DELEGATE_VALUE})
     turn_round()
     assert consensus in validator_set.getValidators()
-
     turn_round([consensus])
     tracker = get_tracker(accounts[0])
-
     if claim_type == "claim":
+        # delegator_info0 = pledge_agent.getDelegator(operator, accounts[0])
+        # reward_info = pledge_agent.getReward(operator, delegator_info0['rewardIndex'])
+        # print("#reward_info:",reward_info)
+        # print("#delta1",tracker.delta())
         pledge_agent.claimReward([operator])
+        # print("#delta2",tracker.delta())
         assert tracker.delta() == BLOCK_REWARD / 2
     elif claim_type == "delegate":
         pledge_agent.delegateCoin(operator, {"value": 100})
@@ -191,26 +199,26 @@ def test_claim_reward_after_transfer_to_duplicated_validator(pledge_agent):
         "active": True,
         "coin": [set_delegate(clients[0], MIN_INIT_DELEGATE_VALUE),
                  set_delegate(clients[1], MIN_INIT_DELEGATE_VALUE, True)],
-        "power": []
+        # "power": []
     }, {
         "address": operators[1],
         "active": True,
         "coin": [set_delegate(clients[0], MIN_INIT_DELEGATE_VALUE),
                  set_delegate(clients[1], MIN_INIT_DELEGATE_VALUE, True)],
-        "power": []
+        # "power": []
     }], BLOCK_REWARD // 2)
 
     _, delegator_reward2 = parse_delegation([{
         "address": operators[0],
         "active": True,
         "coin": [set_delegate(clients[1], MIN_INIT_DELEGATE_VALUE, True)],
-        "power": []
+        # "power": []
     }, {
         "address": operators[1],
         "active": True,
         "coin": [set_delegate(clients[0], MIN_INIT_DELEGATE_VALUE * 2),
                  set_delegate(clients[1], MIN_INIT_DELEGATE_VALUE, True)],
-        "power": []
+        # "power": []
     }], BLOCK_REWARD // 2)
 
     tracker1 = get_tracker(clients[0])
@@ -241,6 +249,8 @@ def test_undelegate_coin_reward(pledge_agent):
     turn_round()
     pledge_agent.undelegateCoin(operator)
     tx = turn_round([consensus])
+    # print("#consensus",consensus)
+    # print("#tx:",tx.events)
     assert "receiveDeposit" in tx.events
     event = tx.events['receiveDeposit'][-1]
     assert event['from'] == pledge_agent.address

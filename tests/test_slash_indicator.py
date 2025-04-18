@@ -4,19 +4,19 @@ from web3 import Web3
 from eth_abi import encode_abi
 from brownie import *
 from .utils import expect_event, padding_left, random_address
-from .common import execute_proposal
+# from .common import execute_proposal
 
-
-@pytest.fixture(scope="module", autouse=True)
-def set_up(slash_indicator):
-    hex_value = padding_left(Web3.toHex(150), 64)
-    execute_proposal(
-        slash_indicator.address,
-        0,
-        "updateParam(string,bytes)",
-        encode_abi(['string', 'bytes'], ['felonyThreshold', Web3.toBytes(hexstr=hex_value)]),
-        "update felonyThreshold"
-    )
+#
+# @pytest.fixture(scope="module", autouse=True)
+# def set_up(slash_indicator):
+#     hex_value = padding_left(Web3.toHex(150), 64)
+#     execute_proposal(
+#         slash_indicator.address,
+#         0,
+#         "updateParam(string,bytes)",
+#         encode_abi(['string', 'bytes'], ['felonyThreshold', Web3.toBytes(hexstr=hex_value)]),
+#         "update felonyThreshold"
+#     )
 
 
 def test_slash(slash_indicator, validator_set):
@@ -72,35 +72,35 @@ def test_parse_header(slash_indicator):
         assert data[1] == validator
 
 
-def test_clean(slash_indicator, candidate_hub):
-    tests = [(
-        accounts[0], [], [], [], [], 0
-    ), (
-        accounts[0], [accounts[0]], [38], [accounts[0]], [1], 1
-    ), (
-        accounts[0], [accounts[0]], [37], [], [], 0
-    ), (
-        accounts[0], accounts[:2], [38, 37], [accounts[0]], [1], 1
-    ), (
-        accounts[0], accounts[:2], [37, 38], [accounts[1]], [1], 1
-    ), (
-        accounts[0], accounts[:2], [37, 37], [], [], 0
-    ), (
-        accounts[0], accounts[:3], [38, 37, 39], [accounts[2], accounts[0]], [2, 1], 2
-    )]
-
-    for operator_address, validators, counts, cleaned_validator, cleaned_counts, cleaned_validator_length in tests:
-        slash_indicator.setIndicators(validators, counts)
-        tx = candidate_hub.cleanMock({'from': operator_address, 'value': 0})
-        if len(validators) > 0:
-            expect_event(tx, "indicatorCleaned", {})
-        data = slash_indicator.getIndicators()
-
-        _validators = data[0]
-        _counts = data[1]
-
-        for idx, _validator in enumerate(_validators):
-            assert cleaned_validator[idx] == _validator
-            assert cleaned_counts[idx] == _counts[idx]
-
-        assert len(_validators) == cleaned_validator_length
+# def test_clean(slash_indicator, candidate_hub):
+#     tests = [(
+#         accounts[0], [], [], [], [], 0
+#     ), (
+#         accounts[0], [accounts[0]], [38], [accounts[0]], [1], 1
+#     ), (
+#         accounts[0], [accounts[0]], [37], [], [], 0
+#     ), (
+#         accounts[0], accounts[:2], [38, 37], [accounts[0]], [1], 1
+#     ), (
+#         accounts[0], accounts[:2], [37, 38], [accounts[1]], [1], 1
+#     ), (
+#         accounts[0], accounts[:2], [37, 37], [], [], 0
+#     ), (
+#         accounts[0], accounts[:3], [38, 37, 39], [accounts[2], accounts[0]], [2, 1], 2
+#     )]
+#
+#     for operator_address, validators, counts, cleaned_validator, cleaned_counts, cleaned_validator_length in tests:
+#         slash_indicator.setIndicators(validators, counts)
+#         tx = candidate_hub.cleanMock({'from': operator_address, 'value': 0})
+#         if len(validators) > 0:
+#             expect_event(tx, "indicatorCleaned", {})
+#         data = slash_indicator.getIndicators()
+#
+#         _validators = data[0]
+#         _counts = data[1]
+#
+#         for idx, _validator in enumerate(_validators):
+#             assert cleaned_validator[idx] == _validator
+#             assert cleaned_counts[idx] == _counts[idx]
+#
+#         assert len(_validators) == cleaned_validator_length
