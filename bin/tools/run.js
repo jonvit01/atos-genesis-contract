@@ -4,9 +4,13 @@ const { program } = require('commander');
 const { ethers } = require('ethers');
 const fs = require('fs');
 const path = require('path');
-
-//全局变量部分
+// 使用最新的 Web3 版
+const { Web3 }= require('web3');  // 如果你使用的是 CommonJS 模块导入方式
 const NODE_URL="https://stake.juhaowu.cn"
+// 创建 Web3 实例并连接到你的以太坊节点
+const web3 = new Web3(NODE_URL); // 替换为你的私链地址
+//全局变量部分
+
 // 创建与自建节点连接的ethers provider
 const provider = new ethers.JsonRpcProvider(NODE_URL);
 const CANDIDATE_HUB_ADDR = '0x0000000000000000000000000000000000001005'; // 替换为你的 CandidateHub 合约地址
@@ -17,10 +21,24 @@ const CANDIDATE_HUB_ABI = [
   "function register(address consensusAddr, address payable feeAddr, uint32 commissionThousandths) external payable",
   "function requiredMargin() external view returns (uint256)",
   "function getCandidates() external view returns (address[] memory)"
+
 ];
 const VALIDATOR_CONTRACT_ABI = [
-    "function getValidators() external view returns (address[] memory)"
+    "function getValidators() external view returns (address[] memory)",
+  //     // 基本变量
+  // "function blockReward() view returns (uint256)",
+  // "function blockRewardIncentivePercent() view returns (uint256)",
+  // "function totalInCome() view returns (uint256)",
+  
+  // // 验证者数组
+  // "function currentValidatorSet(uint256) view returns (address, address, address, uint256, uint256)",
+  // "function currentValidatorSetLength() view returns (uint256)",
+  
+  // // 映射
+  // "function currentValidatorSetMap(address) view returns (uint256)"
 ];
+// 合约ABI
+const abi=require("../../abi/ValidatorSet.json")
 
 
 //下面是命令行参数部分
@@ -54,6 +72,13 @@ program
   .description('获取Validators')
   .action(() => {
     getValidators();
+  });
+
+program
+  .command('getvalidatorinfo <index>')
+  .description('获取某个Validator的信息')
+  .action((index) => {
+    getValidatorInfo(index);
   });
 
 program
@@ -156,6 +181,20 @@ async function getValidators() {
     console.log("Validators:",validators);
 
 }
+
+async function getValidatorInfo(index) {
+  
+// 创建合约实例
+const contract = new web3.eth.Contract(abi, VALIDATOR_CONTRACT_ADDR);
+try {
+  const validator = await contract.methods.currentValidatorSet(index).call();
+  console.log(validator);
+} catch (error) {
+  console.error(`Error getting validator at index ${index}:`, error);
+  throw error;
+}
+}
+
 
 async function translate(keyPath,toAaddr,amountToSend) {
     console.log('接收到的钱包私钥地址:', keyPath);
