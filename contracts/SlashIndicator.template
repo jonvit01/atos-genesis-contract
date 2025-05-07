@@ -21,9 +21,9 @@ contract SlashIndicator is ISlashIndicator,System{
   uint256 public constant MISDEMEANOR_THRESHOLD = 50;
   uint256 public constant FELONY_THRESHOLD = 150;
   uint256 public constant DECREASE_RATE = 4;
-  uint256 public constant INIT_REWARD_FOR_REPORT_DOUBLE_SIGN = 25e25;
+  uint256 public constant INIT_REWARD_FOR_REPORT_DOUBLE_SIGN = 5e24;
   uint32 public constant CHAINID = {{chainid}};
-  uint256 public constant INIT_FELONY_DEPOSIT = 5e26;
+  uint256 public constant INIT_FELONY_DEPOSIT = 1e25;
   uint256 public constant INIT_FELONY_ROUND = 2;
   uint256 public constant INFINITY_ROUND = 0xFFFFFFFFFFFFFFFF;
 

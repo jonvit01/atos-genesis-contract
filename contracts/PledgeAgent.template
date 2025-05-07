@@ -20,7 +20,7 @@ import "./System.sol";
 /// which are eligible for claiming rewards in the acting round
 
 contract PledgeAgent is IPledgeAgent, System {
-  uint256 public constant INIT_REQUIRED_COIN_DEPOSIT = 5e23;
+  uint256 public constant INIT_REQUIRED_COIN_DEPOSIT = 1e22;
 
   uint256 public requiredCoinDeposit;
 

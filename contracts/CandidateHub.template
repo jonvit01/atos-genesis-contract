@@ -15,8 +15,8 @@ import "./lib/Address.sol";
 /// It also exposes the method `turnRound` for the consensus engine to execute the `turn round` workflow
 contract CandidateHub is ICandidateHub, System {
 
-  uint256 public constant INIT_REQUIRED_MARGIN = 5e27;
-  uint256 public constant INIT_DUES = 5e25;
+  uint256 public constant INIT_REQUIRED_MARGIN = 1e26;
+  uint256 public constant INIT_DUES = 1e24;
   uint256 public constant INIT_ROUND_INTERVAL = {{initRoundInterval}};
   uint256 public constant INIT_VALIDATOR_COUNT = {{initValidatorCount}};
   uint256 public constant MAX_COMMISSION_CHANGE = 10;
